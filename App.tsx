@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// App.tsx
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import ListOfListsScreen from './screens/ListOfListsScreen'
+import ShoppingListScreen from './screens/ShoppingListScreen';
+import AddItemsScreen from './screens/AddItemsScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
-export default function App() {
+// Define type for stack params
+export type RootStackParamList = {
+  ListOfLists: undefined;
+  ShoppingList: { listID: string };
+  AddItems: { listID: string };
+  Settings: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="ListOfLists">
+        <Stack.Screen name="ListOfLists" component={ListOfListsScreen} />
+        <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
+        <Stack.Screen name="AddItems" component={AddItemsScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
