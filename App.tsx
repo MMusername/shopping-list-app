@@ -12,8 +12,8 @@ import CustomDrawer from './components/DrawerContent';
 
 export type RootStackParamList = {
     ListOfLists: undefined;
-    ShoppingList: { listID: string };
-    AddItems: { listID: string };
+    ShoppingList: { listID: number };
+    AddItems: { listID: number };
     Settings: undefined;
 };
 

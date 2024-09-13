@@ -1,8 +1,7 @@
 // CustomDrawer.tsx
 import React from 'react';
-import { View, TouchableOpacity, Animated, StyleSheet, Text, Dimensions } from 'react-native';
+import { TouchableOpacity, Animated, StyleSheet, Text, Dimensions } from 'react-native';
 import { NavigationContainerRef } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 // Get device width for drawer calculation
 const { width } = Dimensions.get('window');
