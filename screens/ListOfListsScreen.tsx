@@ -1,12 +1,10 @@
-// TODO: default list name as "Shopping list + date"
-
 // /screens/ListOfListsScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import { useNavigation } from '@react-navigation/native';
-import { createList, createTable, deleteList, getAllLists, getDatabase } from '../scripts/databaseUtils';
+import { createList, createListsTable, deleteList, getAllLists, getDatabase } from '../scripts/databaseUtils';
 import { ListModel } from '../models/ListModel';
 import NewListNameModal from '../components/NewListNameModal';
 import { getDefaultShoppingListName } from '../scripts/utils';
@@ -23,7 +21,7 @@ const ListOfListsScreen: React.FC = () => {
     const db = getDatabase();
 
     useEffect(() => {
-        createTable(db);
+        createListsTable(db);
 
         const lists: ListModel[] = getAllLists(db);
         console.log("lists: ", lists);

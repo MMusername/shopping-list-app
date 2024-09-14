@@ -1,5 +1,5 @@
 // App.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Animated, Dimensions, StyleSheet } from 'react-native';
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import AddItemsScreen from './screens/AddItemsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomDrawer from './components/DrawerContent';
+import { createProductsTableIfNotExist } from './scripts/utils';
 
 export type RootStackParamList = {
     ListOfLists: undefined;
@@ -35,6 +36,11 @@ const App: React.FC = () => {
     };
 
     const navigationRef = React.useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+    // Create product table if not created yet.
+    useEffect(() => {
+        createProductsTableIfNotExist();
+    }, []);
 
     return (
         <NavigationContainer ref={navigationRef}>
