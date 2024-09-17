@@ -17,7 +17,7 @@ type CustomDrawerProps = {
 // Custom drawer component
 const CustomDrawer: React.FC<CustomDrawerProps> = ({ drawerTranslateX, toggleDrawer, navigationRef, setDrawerOpen }) => {
     return (
-        <Animated.View style={[styles.drawer, { top: 90, transform: [{ translateX: drawerTranslateX }] }]}>
+        <Animated.View style={[styles.drawer, { top: 0, transform: [{ translateX: drawerTranslateX }] }]}>
             <TouchableOpacity
                 style={styles.drawerButton}
                 onPress={() => {

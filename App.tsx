@@ -10,6 +10,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomDrawer from './components/DrawerContent';
 import { createProductsTableIfNotExist } from './scripts/utils';
+import { ListItemModel } from './models/ListItemModel';
 
 export type RootStackParamList = {
     ListOfLists: undefined;

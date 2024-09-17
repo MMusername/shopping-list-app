@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { ListModel } from '../models/ListModel';
 import { listsTable, populateProductsListQuery, productsTable } from '../assets/databaseConst';
+import { ProductModel } from '../models/ProductModel';
 
 const getRandomId = (min: number = 1, max: number = 10000): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -54,4 +55,8 @@ export const isProductsTableEmpty = (db: SQLite.SQLiteDatabase) => {
 
 export const populateProductsTable = (db: SQLite.SQLiteDatabase) => {
     db.runAsync(populateProductsListQuery);
+};
+
+export const getAllProducts = (db: SQLite.SQLiteDatabase): ProductModel[] => {
+    return db.getAllSync(`SELECT * From ${productsTable}`) as ProductModel[];
 };
