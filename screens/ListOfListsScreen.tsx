@@ -4,7 +4,7 @@ import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import { useNavigation } from '@react-navigation/native';
-import { createList, createListsTable, deleteList, getAllLists, getDatabase } from '../scripts/databaseUtils';
+import { createList, createListsTable, createShoppingListTable, deleteList, getAllLists, getDatabase } from '../scripts/databaseUtils';
 import { ListModel } from '../models/ListModel';
 import NewListNameModal from '../components/NewListNameModal';
 import { getDefaultShoppingListName } from '../scripts/utils';
@@ -39,6 +39,7 @@ const ListOfListsScreen: React.FC = () => {
         console.log("name: ", newListName);
         const name = newListName !== "" ? newListName : getDefaultShoppingListName();
         const newList = createList(db, name);
+        createShoppingListTable(db, newList.id);
         setShoppingLists([...shoppingLists, newList]);
         setNewListName('');
         navigation.navigate('ShoppingList', { listID: newList.id});

@@ -2,6 +2,9 @@ import * as SQLite from 'expo-sqlite';
 import { ListModel } from '../models/ListModel';
 import { listsTable, populateProductsListQuery, productsTable } from '../assets/databaseConst';
 import { ProductModel } from '../models/ProductModel';
+import { ListItemModel } from '../models/ListItemModel';
+
+const shoppingList: string = 'ShoppingList_';
 
 const getRandomId = (min: number = 1, max: number = 10000): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -59,4 +62,30 @@ export const populateProductsTable = (db: SQLite.SQLiteDatabase) => {
 
 export const getAllProducts = (db: SQLite.SQLiteDatabase): ProductModel[] => {
     return db.getAllSync(`SELECT * From ${productsTable}`) as ProductModel[];
+};
+
+export const createShoppingListTable = (db: SQLite.SQLiteDatabase, id: number) => {
+    const query = `CREATE TABLE IF NOT EXISTS ${shoppingList + id} (
+        id INT PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        url TEXT,
+        isBought BOOLEAN NOT NULL
+    );`;
+    db.execAsync(query);
+};
+
+export const insertIntoShoppingList = (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
+    const query = `INSERT INTO ${shoppingList + id} (id, name, type, url, isBought) 
+    VALUES (${item.id}, '${item.name}', '${item.type}', '${item.url}', 0);`;
+    db.execAsync(query);
+};
+
+export const deleteFromShoppingList = (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
+    const query = `DELETE FROM ${shoppingList + id} WHERE id = ${item.id}`;
+    db.runAsync(query);
+};
+
+export const getShoppingList = (db: SQLite. SQLiteDatabase, id: number): ListItemModel[] => {
+    return db.getAllSync(`SELECT * From ${shoppingList + id}`) as ListItemModel[];
 };
