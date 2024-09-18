@@ -6,26 +6,10 @@ import { RootStackParamList } from '../App';
 import { ProductModel } from '../models/ProductModel';
 import { deleteFromShoppingList, getAllProducts, getDatabase, getShoppingList, insertIntoShoppingList } from '../scripts/databaseUtils';
 import { ListItemModel } from '../models/ListItemModel';
+import ListOfItems from '../components/ListOfItems';
+import { groupByType } from '../scripts/utils';
 
 type AddItemsScreenRouteProp = RouteProp<RootStackParamList, 'AddItems'>;
-
-const groupByType = (items: ListItemModel[]) => {
-    return items.reduce((acc, item) => {
-        const foundSection = acc.find(section => section.title === item.type);
-
-        if (foundSection) {
-            foundSection.data.push(item);
-        } 
-        else {
-            acc.push({
-                title: item.type,
-                data: [item],
-            });
-        }
-
-        return acc;
-    }, [] as { title: string; data: ListItemModel[] }[]);
-};
 
 const AddItemsScreen: React.FC = () => {
     const route = useRoute<AddItemsScreenRouteProp>();
@@ -77,22 +61,7 @@ const AddItemsScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Add items to List ID: {listID}</Text>
-            <SectionList
-                sections={groupedProducts}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item} ) => (
-                    <TouchableOpacity
-                        onPress={() => handleProductPressed(item)}
-                    >
-                        <Text>{item.name}   |   {item.isBought ? "kupiony" : "nie"}</Text>
-                    </TouchableOpacity>
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                    <View>
-                        <Text style={{ color: 'red' }}>{title}</Text>
-                    </View>
-                )}
-            />
+            <ListOfItems groupedProducts={groupedProducts} handleProductPressed={handleProductPressed} />
         </View>
     );
 };

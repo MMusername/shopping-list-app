@@ -1,3 +1,4 @@
+import { ListItemModel } from '../models/ListItemModel';
 import { createProductsTable, getDatabase, isProductsTableEmpty, populateProductsTable } from './databaseUtils';
 
 /* Returns string: 'Shopping List + {DD.MM}' */
@@ -20,4 +21,22 @@ export const createProductsTableIfNotExist = () => {
     else {
         console.log("no need to populate products table.");
     }
+};
+
+export const groupByType = (items: ListItemModel[]) => {
+    return items.reduce((acc, item) => {
+        const foundSection = acc.find(section => section.title === item.type);
+
+        if (foundSection) {
+            foundSection.data.push(item);
+        } 
+        else {
+            acc.push({
+                title: item.type,
+                data: [item],
+            });
+        }
+
+        return acc;
+    }, [] as { title: string; data: ListItemModel[] }[]);
 };

@@ -75,17 +75,22 @@ export const createShoppingListTable = (db: SQLite.SQLiteDatabase, id: number) =
     db.execAsync(query);
 };
 
-export const insertIntoShoppingList = (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
+export const insertIntoShoppingList = async (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
     const query = `INSERT INTO ${shoppingList + id} (id, name, type, url, isBought) 
     VALUES (${item.id}, '${item.name}', '${item.type}', '${item.url}', 0);`;
     db.execAsync(query);
 };
 
-export const deleteFromShoppingList = (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
+export const deleteFromShoppingList = async (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
     const query = `DELETE FROM ${shoppingList + id} WHERE id = ${item.id}`;
     db.runAsync(query);
 };
 
-export const getShoppingList = (db: SQLite. SQLiteDatabase, id: number): ListItemModel[] => {
+export const getShoppingList = (db: SQLite.SQLiteDatabase, id: number): ListItemModel[] => {
     return db.getAllSync(`SELECT * From ${shoppingList + id}`) as ListItemModel[];
 };
+
+export const updateIsBought = async (db: SQLite.SQLiteDatabase, listID: number, itemID: number) => {
+    const query = `UPDATE ${shoppingList + listID} SET isBought = NOT isBought WHERE id = ${itemID}`;
+    db.runAsync(query);
+}
