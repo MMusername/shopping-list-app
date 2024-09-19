@@ -30,6 +30,7 @@ const AddItemsScreen: React.FC = () => {
             .map(item => ({
                 ...item,
                 isBought: shoppingList.some(p => p.id === item.id),
+                note: "",
             }))
         .sort((a, b) => {
             if (a.type !== b.type) {

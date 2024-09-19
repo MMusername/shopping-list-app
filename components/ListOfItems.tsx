@@ -18,7 +18,7 @@ const ListOfItems: React.FC<ListOfItemsProps> = ({ groupedProducts, handleProduc
                     onPress={() => handleProductPressed(item)}
                     onLongPress={() => handleProductLongPressed(item)}
                 >
-                    <Text>{item.name}   |   {item.isBought ? "kupiony" : "nie"}</Text>
+                    <Text>{item.name}   |   {item.note}     |     {item.isBought ? "kupiony" : "nie"}</Text>
                 </TouchableOpacity>
             )}
             renderSectionHeader={({ section: { title } }) => (

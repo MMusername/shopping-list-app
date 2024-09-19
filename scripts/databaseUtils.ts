@@ -70,15 +70,20 @@ export const createShoppingListTable = (db: SQLite.SQLiteDatabase, id: number) =
         name TEXT NOT NULL,
         type TEXT NOT NULL,
         url TEXT,
-        isBought BOOLEAN NOT NULL
+        isBought BOOLEAN NOT NULL,
+        note TEXT
     );`;
-    db.execAsync(query);
+    db.execSync(query);
 };
 
 export const insertIntoShoppingList = async (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
-    const query = `INSERT INTO ${shoppingList + id} (id, name, type, url, isBought) 
-    VALUES (${item.id}, '${item.name}', '${item.type}', '${item.url}', 0);`;
-    db.execAsync(query);
+    const query_note = `INSERT INTO ${shoppingList + id} (id, name, type, url, isBought, note) 
+    VALUES (${item.id}, '${item.name}', '${item.type}', '${item.url}', 0, ${item.note});`;
+
+    const query_not_note = `INSERT INTO ${shoppingList + id} (id, name, type, url, isBought, note) 
+    VALUES (${item.id}, '${item.name}', '${item.type}', '${item.url}', 0, NULL);`;
+
+    db.execAsync(item.note ? query_note : query_not_note);
 };
 
 export const deleteFromShoppingList = async (db: SQLite.SQLiteDatabase, id: number, item: ListItemModel) => {
@@ -87,10 +92,17 @@ export const deleteFromShoppingList = async (db: SQLite.SQLiteDatabase, id: numb
 };
 
 export const getShoppingList = (db: SQLite.SQLiteDatabase, id: number): ListItemModel[] => {
+    createShoppingListTable(db, id);
     return db.getAllSync(`SELECT * From ${shoppingList + id}`) as ListItemModel[];
 };
 
 export const updateIsBought = async (db: SQLite.SQLiteDatabase, listID: number, itemID: number) => {
     const query = `UPDATE ${shoppingList + listID} SET isBought = NOT isBought WHERE id = ${itemID}`;
     db.runAsync(query);
-}
+};
+
+export const updateItemNote = async (db: SQLite.SQLiteDatabase, listID: number, itemID: number, note: string | null) => {
+    if (note === "" || note === null)   return;
+    const query = `UPDATE ${shoppingList + listID} SET note = '${note}' WHERE id = ${itemID}`;
+    db.runAsync(query);
+};

@@ -1,13 +1,14 @@
 // src/screens/ShoppingListScreen.tsx
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Modal } from 'react-native';
 import { RouteProp, useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import { ListItemModel } from '../models/ListItemModel';
-import { getDatabase, getShoppingList, updateIsBought } from '../scripts/databaseUtils';
+import { deleteFromShoppingList, getDatabase, getShoppingList, updateIsBought, updateItemNote } from '../scripts/databaseUtils';
 import ListOfItems from '../components/ListOfItems';
 import { groupByType } from '../scripts/utils';
+import EditItemModal from '../components/EditItemModal';
 
 // Define the type of the route and navigation props
 type ShoppingListScreenRouteProp = RouteProp<RootStackParamList, 'ShoppingList'>;
@@ -19,6 +20,9 @@ const ShoppingListScreen: React.FC = () => {
     const { listID } = route.params;
     const [shoppingList, setShoppingList] = useState<ListItemModel[]>([]);
     const [groupedProducts, setGroupedProducts] = useState<{title: string, data: ListItemModel[]}[]>([]);
+    const [itemNote, setItemNote] = useState<string>("");
+    const [editItemModalVisible, setEditItemModalVisible] = useState<boolean>(false);
+    const [currentItem, setCurrentItem] = useState<ListItemModel | null>(null);
 
     const db = getDatabase();
 
@@ -53,11 +57,42 @@ const ShoppingListScreen: React.FC = () => {
     };
 
     const handleProductLongPressed = (item: ListItemModel) => {
-        console.log("Long pressed:", item.name);
+        setCurrentItem(item);
+        setItemNote(item.note);
+        setEditItemModalVisible(true);
+    }
+
+    const handleAddNote = () => {
+        if (currentItem && itemNote) {
+            updateItemNote(db, listID, currentItem?.id, itemNote);
+            setShoppingList(shoppingList.map(p => 
+                p.id === currentItem.id
+                    ? {...p, note: itemNote}
+                    : p
+            ));
+        }
+        setEditItemModalVisible(false);
+    }
+
+    const handleDeleteItem = () => {
+        if (currentItem) {
+            deleteFromShoppingList(db, listID, currentItem);        
+            setShoppingList(shoppingList.filter(p => p.id !== currentItem.id));
+        }
+        setEditItemModalVisible(false);
     }
 
     return (
         <View style={styles.container}>
+            <EditItemModal 
+                visible={editItemModalVisible} 
+                setVisible={setEditItemModalVisible}
+                itemNote={itemNote} 
+                setItemNote={setItemNote}
+                handleAddNote={handleAddNote}
+                handleDeleteItem={handleDeleteItem}
+            />
+
             <Text style={styles.text}>Shopping List ID: {listID}</Text>
             <ListOfItems 
                 groupedProducts={groupedProducts} 
