@@ -31,11 +31,11 @@ const ShoppingListScreen: React.FC = () => {
 
     useEffect(() => {
         const prod = shoppingList.sort((a, b) => {
-            if (a.isBought !== b.isBought) {
-                return a.isBought ? 1 : -1;
-            }
             if (a.type !== b.type) {
                 return a.type.localeCompare(b.type);
+            }
+            if (a.isBought !== b.isBought) {
+                return a.isBought ? 1 : -1;
             }
             return a.name.localeCompare(b.name);
         });
@@ -52,10 +52,18 @@ const ShoppingListScreen: React.FC = () => {
         updateIsBought(db, listID, item.id);
     };
 
+    const handleProductLongPressed = (item: ListItemModel) => {
+        console.log("Long pressed:", item.name);
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Shopping List ID: {listID}</Text>
-            <ListOfItems groupedProducts={groupedProducts} handleProductPressed={handleProductPressed}/>
+            <ListOfItems 
+                groupedProducts={groupedProducts} 
+                handleProductPressed={handleProductPressed}
+                handleProductLongPressed={handleProductLongPressed}
+            />
             <Button
                 title="Add Items to this List"
                 onPress={() => navigation.navigate('AddItems', { listID })}
