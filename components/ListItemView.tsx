@@ -8,10 +8,13 @@ type ListItemModelProp = {
 };
 
 const ListItemView: React.FC<ListItemModelProp> = ({item, isAddingScreen}) => {
+
+    const itemNoteText = (isNaN(Number(item.note))) ? item.note : " x" + item.note;
+
     return (
         <View style={styles.container}>
             <Text style={(item.isBought && !isAddingScreen) && styles.crossedText}>
-                {item.name} {item.note}
+                {item.name} {item.note && itemNoteText}
             </Text>
             {(item.isBought === true && isAddingScreen === true) && (
                 <View style={styles.tickIcon}></View>
