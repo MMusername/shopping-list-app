@@ -8,7 +8,7 @@ type EditItemModalProps = {
     itemNote: string;
     setItemNote: React.Dispatch<React.SetStateAction<string>>;
     handleAddNote: () => void;
-    handleDeleteItem: () => void;
+    handleDeleteItem: (() => void) | null;
 };
 
 const EditItemModal: React.FC<EditItemModalProps> = ({
@@ -37,9 +37,11 @@ const EditItemModal: React.FC<EditItemModalProps> = ({
                     <TouchableOpacity onPress={handleAddNote}>
                         <Text>Update item note</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleDeleteItem}>
-                        <Text>Delete Item</Text>
-                    </TouchableOpacity>
+                    {handleDeleteItem !== null &&
+                        <TouchableOpacity onPress={handleDeleteItem}>
+                            <Text>Delete Item</Text>
+                        </TouchableOpacity>
+                    }
                 </View>
             </View>
         </Modal>

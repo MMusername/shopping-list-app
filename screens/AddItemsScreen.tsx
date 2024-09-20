@@ -4,10 +4,11 @@ import { View, Text, SectionList, StyleSheet, TouchableOpacity } from 'react-nat
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { ProductModel } from '../models/ProductModel';
-import { deleteFromShoppingList, getAllProducts, getDatabase, getShoppingList, insertIntoShoppingList } from '../scripts/databaseUtils';
+import { deleteFromShoppingList, getAllProducts, getDatabase, getShoppingList, insertIntoShoppingList, updateItemNote } from '../scripts/databaseUtils';
 import { ListItemModel } from '../models/ListItemModel';
 import ListOfItems from '../components/ListOfItems';
 import { groupByType } from '../scripts/utils';
+import EditItemModal from '../components/EditItemModal';
 
 type AddItemsScreenRouteProp = RouteProp<RootStackParamList, 'AddItems'>;
 
@@ -17,6 +18,9 @@ const AddItemsScreen: React.FC = () => {
     const [allProducts, setAllProducts] = useState<ProductModel[]>([]);
     const [groupedProducts, setGroupedProducts] = useState<{title: string, data: ListItemModel[]}[]>([]);
     const [shoppingList, setShoppingList] = useState<ListItemModel[]>([]);
+    const [editItemModalVisible, setEditItemModalVisible] = useState<boolean>(false);
+    const [itemNote, setItemNote] = useState<string>("");
+    const [currentItem, setCurrentItem] = useState<ListItemModel>();
 
     const db = getDatabase();
 
@@ -57,14 +61,41 @@ const AddItemsScreen: React.FC = () => {
             setShoppingList([...shoppingList, item]);
             insertIntoShoppingList(db, listID, item);
         }
-    }
+    };
 
     const handleProductLongPressed = (item: ListItemModel) => {
-        console.log("Long pressed:", item.name);
-    }
+        setCurrentItem(item);
+        setItemNote(item.note);
+        handleProductPressed(item);
+        setEditItemModalVisible(true);
+    };
+
+    const handleAddItemNote = () => {
+
+        if (currentItem && itemNote) {
+            updateItemNote(db, listID, currentItem?.id, itemNote);
+            setShoppingList(shoppingList.map(p => 
+                p.id === currentItem.id
+                    ? {...p, note: itemNote}
+                    : p
+            ));
+        }
+
+        setEditItemModalVisible(false);
+    };
 
     return (
         <View style={styles.container}>
+
+            <EditItemModal 
+                visible={editItemModalVisible} 
+                setVisible={setEditItemModalVisible}
+                itemNote={itemNote} 
+                setItemNote={setItemNote}
+                handleAddNote={handleAddItemNote}
+                handleDeleteItem={null}
+            />
+
             <Text style={styles.text}>Add items to List ID: {listID}</Text>
             <ListOfItems 
                 groupedProducts={groupedProducts} 
