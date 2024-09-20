@@ -1,6 +1,6 @@
 // src/screens/AddItemsScreen.tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { ProductModel } from '../models/ProductModel';
@@ -71,7 +71,6 @@ const AddItemsScreen: React.FC = () => {
     };
 
     const handleAddItemNote = () => {
-
         if (currentItem && itemNote) {
             updateItemNote(db, listID, currentItem?.id, itemNote);
             setShoppingList(shoppingList.map(p => 
@@ -80,7 +79,6 @@ const AddItemsScreen: React.FC = () => {
                     : p
             ));
         }
-
         setEditItemModalVisible(false);
     };
 
@@ -101,6 +99,7 @@ const AddItemsScreen: React.FC = () => {
                 groupedProducts={groupedProducts} 
                 handleProductPressed={handleProductPressed} 
                 handleProductLongPressed={handleProductLongPressed}
+                isAddingScreen={true}
             />
         </View>
     );

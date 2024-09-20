@@ -98,6 +98,7 @@ const ShoppingListScreen: React.FC = () => {
                 groupedProducts={groupedProducts} 
                 handleProductPressed={handleProductPressed}
                 handleProductLongPressed={handleProductLongPressed}
+                isAddingScreen={false}
             />
             <Button
                 title="Add Items to this List"

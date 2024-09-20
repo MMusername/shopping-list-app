@@ -1,14 +1,21 @@
 import React from "react";
 import { SectionList, TouchableOpacity, View, Text } from "react-native";
 import { ListItemModel } from "../models/ListItemModel";
+import ListItemView from "./ListItemView";
 
 type ListOfItemsProps = {
     groupedProducts: {title: string, data: ListItemModel[]}[];
     handleProductPressed: (item: ListItemModel) => void;
     handleProductLongPressed: (item: ListItemModel) => void;
+    isAddingScreen: boolean;
 };
 
-const ListOfItems: React.FC<ListOfItemsProps> = ({ groupedProducts, handleProductPressed, handleProductLongPressed }) => {
+const ListOfItems: React.FC<ListOfItemsProps> = ({ 
+    groupedProducts, 
+    handleProductPressed, 
+    handleProductLongPressed,
+    isAddingScreen
+}) => {
     return (
         <SectionList
             sections={groupedProducts}
@@ -18,7 +25,7 @@ const ListOfItems: React.FC<ListOfItemsProps> = ({ groupedProducts, handleProduc
                     onPress={() => handleProductPressed(item)}
                     onLongPress={() => handleProductLongPressed(item)}
                 >
-                    <Text>{item.name}   |   {item.note}     |     {item.isBought ? "kupiony" : "nie"}</Text>
+                    <ListItemView item={item} isAddingScreen={isAddingScreen}/>
                 </TouchableOpacity>
             )}
             renderSectionHeader={({ section: { title } }) => (
